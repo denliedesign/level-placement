@@ -12,7 +12,7 @@
             <div class="card shadow-sm">
                 <div class="card-body text-dark text-center">
                     {{ __("You're logged in!") }}
-                    <div class="text-center"><a href="/levels">View Level Placement</a></div>
+                    <a href="/levels"><div class="text-center btn btn-lg btn-primary">View Level Placement</div></a>
                 </div>
             </div>
         </div>

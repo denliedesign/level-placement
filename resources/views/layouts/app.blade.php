@@ -28,8 +28,8 @@
         <!-- For guests (not logged in) -->
             @guest
                 <div class="my-3">
-                    <a class="mx-3" href="{{ route('login') }}">Login</a>
-                    <a class="mx-3" href="{{ route('register') }}">Register</a>
+                    <a class="mx-3" href="{{ route('register') }}"><div class="btn btn-lg btn-danger">Register</div></a>
+                    <a class="mx-3 text-muted" href="{{ route('login') }}"><small>Login</small></a>
                 </div>
             @endguest
         </nav>
