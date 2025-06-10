@@ -4,7 +4,7 @@
     <h1 class="text-center mt-5">MDU Level Placement</h1>
     <div class="container my-5 d-flex align-items-center justify-content-center">
         <div>
-            <h2 class="text-center"><u>All families must register a new account</u> with the main email from your studio account</h2>
+            <h2 class="text-center"><a href="/register">All families must register a new account</a> with the main email from your studio account</h2>
             <ul>
                 <li>If you have multiple dancers, just create one account.</li>
 {{--                <li>If you try to Register a new account and you receive a message in red that says "the email has already been taken", then use the Login option.</li>--}}
