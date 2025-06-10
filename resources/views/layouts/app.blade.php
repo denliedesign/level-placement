@@ -32,6 +32,9 @@
                     <a class="mx-3 text-muted" href="{{ route('login') }}"><small>Login</small></a>
                 </div>
             @endguest
+            <div class="d-flex justify-content-center">
+                <img src="/images/logo-mdu.png" style="height: 100px" width="auto" alt="">
+            </div>
         </nav>
        @yield('content')
 
