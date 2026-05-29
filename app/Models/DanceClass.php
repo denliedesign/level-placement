@@ -108,6 +108,15 @@ class DanceClass extends Model
             }
         }
 
+        if (preg_match('/^(\d+)\s*\/\s*(\d+)$/', $level, $matches) === 1 && abs((int) $matches[2] - (int) $matches[1]) > 1) {
+            $start = min((int) $matches[1], (int) $matches[2]);
+            $end = max((int) $matches[1], (int) $matches[2]);
+
+            if ($end - $start <= 12) {
+                return array_map('strval', range($start, $end));
+            }
+        }
+
         if (preg_match('/^\d+([\s\/,]+\d+)+$/', $level) === 1) {
             return collect(preg_split('/[\s\/,]+/', $level))
                 ->filter()

@@ -16,3 +16,8 @@ test('pointe combined class levels expand to searchable placement keys', functio
             'pointe|1',
         ]);
 });
+
+test('slash levels with a wide gap are treated as ranges', function () {
+    expect(DanceClass::levelOptions('1/7'))->toBe(['1', '2', '3', '4', '5', '6', '7'])
+        ->and(DanceClass::levelOptions('4/5'))->toBe(['4', '5']);
+});

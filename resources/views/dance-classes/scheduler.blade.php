@@ -424,6 +424,17 @@
                 return pointeOptions;
             }
 
+            const slashRangeMatch = normalizedLevel.match(/^(\d+)\s*\/\s*(\d+)$/);
+
+            if (slashRangeMatch && Math.abs(Number(slashRangeMatch[2]) - Number(slashRangeMatch[1])) > 1) {
+                let start = Math.min(Number(slashRangeMatch[1]), Number(slashRangeMatch[2]));
+                let end = Math.max(Number(slashRangeMatch[1]), Number(slashRangeMatch[2]));
+
+                if (end - start <= 12) {
+                    return Array.from({ length: end - start + 1 }, (_, index) => String(start + index));
+                }
+            }
+
             const rangeMatch = normalizedLevel.match(/^(\d+)\s*(?:-|\u2013)\s*(\d+)$/);
 
             if (rangeMatch) {
