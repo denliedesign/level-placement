@@ -53,39 +53,43 @@ class Level extends Model
 
     public function specialtyClasses(): array
     {
+        $classes = [];
         $jazzLevel = trim((string) $this->jazz);
 
-        if (! is_numeric($jazzLevel)) {
-            return [];
-        }
+        if (is_numeric($jazzLevel)) {
+            $jazzLevel = (int) $jazzLevel;
 
-        $jazzLevel = (int) $jazzLevel;
-
-        if ($jazzLevel >= 1 && $jazzLevel <= 2) {
-            return [
+            if ($jazzLevel >= 1 && $jazzLevel <= 2) {
+                $classes = [
                 '1st Intermediate Modern',
                 '1st Intermediate Lyrical',
                 '1st Intermediate Hip Hop',
-            ];
-        }
+                '1st Intermediate Musical Theater',
+                ];
+            }
 
-        if ($jazzLevel >= 3 && $jazzLevel <= 4) {
-            return [
+            if ($jazzLevel >= 3 && $jazzLevel <= 4) {
+                $classes = [
                 'High Intermediate Modern',
                 'High Intermediate Lyrical',
                 'High Intermediate Hip Hop',
-            ];
-        }
+                ];
+            }
 
-        if ($jazzLevel >= 5 && $jazzLevel <= 7) {
-            return [
+            if ($jazzLevel >= 5 && $jazzLevel <= 7) {
+                $classes = [
                 'Advanced Modern',
                 'Advanced Lyrical',
                 'Advanced Hip Hop',
-            ];
+                ];
+            }
         }
 
-        return [];
+        if ($this->strengthAndStretchPlacements() !== []) {
+            $classes[] = 'Strength & Stretch';
+        }
+
+        return collect($classes)->unique()->values()->all();
     }
 
     public function eligibleClassNames(): array
@@ -110,6 +114,10 @@ class Level extends Model
         }
 
         foreach ($this->specialtyClassPlacements() as $placement) {
+            $placements[] = $placement;
+        }
+
+        foreach ($this->strengthAndStretchPlacements() as $placement) {
             $placements[] = $placement;
         }
 
@@ -149,7 +157,7 @@ class Level extends Model
             ->map(function (string $className) {
                 $normalizedClassName = DanceClass::normalizeClassName($className);
 
-                foreach (['Hip Hop', 'Modern', 'Lyrical'] as $style) {
+                foreach (['Musical Theater', 'Hip Hop', 'Modern', 'Lyrical'] as $style) {
                     $normalizedStyle = DanceClass::normalizeClassName($style);
 
                     if (str_ends_with($normalizedClassName, $normalizedStyle)) {
@@ -163,6 +171,19 @@ class Level extends Model
                 return null;
             })
             ->filter()
+            ->values()
+            ->all();
+    }
+
+    private function strengthAndStretchPlacements(): array
+    {
+        return collect($this->placementEntries())
+            ->map(fn (array $placement) => trim((string) $placement['value']))
+            ->filter(fn (string $level) => is_numeric($level) && (int) $level >= 1 && (int) $level <= 7)
+            ->map(fn (string $level) => [
+                'style' => 'Strength & Stretch',
+                'level' => $level,
+            ])
             ->values()
             ->all();
     }
