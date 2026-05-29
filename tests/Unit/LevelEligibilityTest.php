@@ -36,3 +36,23 @@ test('strength and stretch eligibility follows numeric placement levels', functi
             'level' => 'Pre',
         ]);
 });
+
+test('specialty eligibility falls back from jazz to ballet then tap', function () {
+    $balletFallback = new Level([
+        'jazz' => null,
+        'ballet' => '4',
+        'tap' => '1',
+    ]);
+
+    $tapFallback = new Level([
+        'jazz' => null,
+        'ballet' => null,
+        'tap' => '6',
+    ]);
+
+    expect($balletFallback->specialtyClasses())->toContain('High Intermediate Hip Hop')
+        ->and($balletFallback->specialtyClasses())->not->toContain('1st Intermediate Hip Hop')
+        ->and($tapFallback->specialtyClasses())->toContain('Advanced Hip Hop')
+        ->and($tapFallback->specialtyClasses())->toContain('Advanced Lyrical')
+        ->and($tapFallback->specialtyClasses())->toContain('Advanced Modern');
+});

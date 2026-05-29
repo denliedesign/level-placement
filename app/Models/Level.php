@@ -54,12 +54,10 @@ class Level extends Model
     public function specialtyClasses(): array
     {
         $classes = [];
-        $jazzLevel = trim((string) $this->jazz);
+        $specialtyLevel = $this->specialtyPlacementLevel();
 
-        if (is_numeric($jazzLevel)) {
-            $jazzLevel = (int) $jazzLevel;
-
-            if ($jazzLevel >= 1 && $jazzLevel <= 2) {
+        if ($specialtyLevel !== null) {
+            if ($specialtyLevel >= 1 && $specialtyLevel <= 2) {
                 $classes = [
                 '1st Intermediate Modern',
                 '1st Intermediate Lyrical',
@@ -68,7 +66,7 @@ class Level extends Model
                 ];
             }
 
-            if ($jazzLevel >= 3 && $jazzLevel <= 4) {
+            if ($specialtyLevel >= 3 && $specialtyLevel <= 4) {
                 $classes = [
                 'High Intermediate Modern',
                 'High Intermediate Lyrical',
@@ -76,7 +74,7 @@ class Level extends Model
                 ];
             }
 
-            if ($jazzLevel >= 5 && $jazzLevel <= 7) {
+            if ($specialtyLevel >= 5 && $specialtyLevel <= 7) {
                 $classes = [
                 'Advanced Modern',
                 'Advanced Lyrical',
@@ -186,6 +184,19 @@ class Level extends Model
             ])
             ->values()
             ->all();
+    }
+
+    private function specialtyPlacementLevel(): ?int
+    {
+        foreach (['jazz', 'ballet', 'tap'] as $attribute) {
+            $level = trim((string) $this->{$attribute});
+
+            if (is_numeric($level)) {
+                return (int) $level;
+            }
+        }
+
+        return null;
     }
 
     private function hasTextValue(?string $value): bool
