@@ -3,10 +3,14 @@
     <div style="max-width: 500px; margin: 50px auto; text-align: center; font-family: sans-serif;">
         <h2 style="color: #c00;">Email Not Found</h2>
         <p style="font-size: 1.1em;">
-            Please try logging in or registering using the same email you provided to your dance studio.
+            We could not find dancer results for the email on this account.
+            Please log out and try another email address your family may have used with the studio.
+        </p>
+        <p class="text-muted">
+            If registration says the email has already been taken, use Login instead. If you forgot the password for that email, use Forgot your password? on the login page.
         </p>
         <div style="margin-top: 30px;">
-            <a class="text-decoration-none" style="margin-right: 15px; text-decoration: none; color: #fff; background: #007BFF; padding: 10px 20px; border-radius: 5px;" href="{{ route('logout') }}"
+            <a class="btn-brand-danger" href="{{ route('logout') }}"
                onclick="event.preventDefault();
                                                                                      document.getElementById('logout-form').submit();">
                 {{ __('Logout') }}

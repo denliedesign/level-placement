@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
+    @include('partials.placement-instructions')
+
     <div class="container my-5 d-flex justify-content-center align-items-center">
         @if (session('status'))
             <div class="alert alert-success mb-4">
@@ -38,12 +40,12 @@
             <!-- Actions -->
             <div class="d-flex justify-content-between align-items-center">
                 @if (Route::has('password.request'))
-                    <a class="text-decoration-underline small text-muted" href="{{ route('password.request') }}">
+                    <a class="brand-link small" href="{{ route('password.request') }}">
                         {{ __('Forgot your password?') }}
                     </a>
                 @endif
 
-                <button type="submit" class="btn btn-primary">
+                <button type="submit" class="btn-brand-primary">
                     {{ __('Log in') }}
                 </button>
             </div>

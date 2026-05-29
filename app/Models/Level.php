@@ -2,10 +2,19 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 class Level extends Model
 {
+    private const STYLE_LABELS = [
+        'ballet' => 'Ballet',
+        'jazz' => 'Jazz',
+        'tap' => 'Tap',
+        'pointe' => 'Pointe',
+        'acro' => 'Acro',
+    ];
+
     protected $fillable = [
         'first_name',
         'last_name',
@@ -15,5 +24,151 @@ class Level extends Model
         'tap',
         'pointe',
         'acro',
+        'teacher_recommendation',
+        'teacher_comments',
     ];
+
+    public function fullName(): string
+    {
+        return trim($this->first_name.' '.$this->last_name);
+    }
+
+    public function placementEntries(): array
+    {
+        $entries = [];
+
+        foreach (self::STYLE_LABELS as $attribute => $label) {
+            $value = $this->{$attribute};
+
+            if ($this->hasPlacementValue($value)) {
+                $entries[] = [
+                    'label' => $label,
+                    'value' => $value,
+                ];
+            }
+        }
+
+        return $entries;
+    }
+
+    public function specialtyClasses(): array
+    {
+        $jazzLevel = trim((string) $this->jazz);
+
+        if (! is_numeric($jazzLevel)) {
+            return [];
+        }
+
+        $jazzLevel = (int) $jazzLevel;
+
+        if ($jazzLevel >= 1 && $jazzLevel <= 2) {
+            return [
+                '1st Intermediate Modern',
+                '1st Intermediate Lyrical',
+                '1st Intermediate Hip Hop',
+            ];
+        }
+
+        if ($jazzLevel >= 3 && $jazzLevel <= 4) {
+            return [
+                'High Intermediate Modern',
+                'High Intermediate Lyrical',
+                'High Intermediate Hip Hop',
+            ];
+        }
+
+        if ($jazzLevel >= 5 && $jazzLevel <= 7) {
+            return [
+                'Advanced Modern',
+                'Advanced Lyrical',
+                'Advanced Hip Hop',
+            ];
+        }
+
+        return [];
+    }
+
+    public function eligibleClassNames(): array
+    {
+        return collect($this->eligibleClassPlacements())
+            ->map(fn (array $placement) => DanceClass::classNameFor($placement['style'], $placement['level']))
+            ->filter()
+            ->unique()
+            ->values()
+            ->all();
+    }
+
+    public function eligibleClassPlacements(): array
+    {
+        $placements = [];
+
+        foreach ($this->placementEntries() as $placement) {
+            $placements[] = [
+                'style' => $placement['label'],
+                'level' => $placement['value'],
+            ];
+        }
+
+        foreach ($this->specialtyClassPlacements() as $placement) {
+            $placements[] = $placement;
+        }
+
+        return collect($placements)
+            ->filter(fn (array $placement) => $this->hasTextValue($placement['style'] ?? '') && $this->hasTextValue($placement['level'] ?? ''))
+            ->unique(fn (array $placement) => DanceClass::normalizeClassName($placement['style']).'|'.DanceClass::normalizeClassName($placement['level']))
+            ->filter()
+            ->values()
+            ->all();
+    }
+
+    public function matchingDanceClasses(): Collection
+    {
+        return DanceClass::matchingPlacements($this->eligibleClassPlacements());
+    }
+
+    public function hasTeacherRecommendation(): bool
+    {
+        return $this->hasTextValue($this->teacher_recommendation);
+    }
+
+    public function hasTeacherComments(): bool
+    {
+        return $this->hasTextValue($this->teacher_comments);
+    }
+
+    private function hasPlacementValue(?string $value): bool
+    {
+        $value = trim((string) $value);
+
+        return $value !== '' && $value !== '0';
+    }
+
+    private function specialtyClassPlacements(): array
+    {
+        return collect($this->specialtyClasses())
+            ->map(function (string $className) {
+                $normalizedClassName = DanceClass::normalizeClassName($className);
+
+                foreach (['Hip Hop', 'Modern', 'Lyrical'] as $style) {
+                    $normalizedStyle = DanceClass::normalizeClassName($style);
+
+                    if (str_ends_with($normalizedClassName, $normalizedStyle)) {
+                        return [
+                            'style' => $style,
+                            'level' => trim(substr($className, 0, -strlen($style))),
+                        ];
+                    }
+                }
+
+                return null;
+            })
+            ->filter()
+            ->values()
+            ->all();
+    }
+
+    private function hasTextValue(?string $value): bool
+    {
+        return trim((string) $value) !== '';
+    }
 }

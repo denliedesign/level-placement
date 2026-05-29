@@ -26,7 +26,7 @@
                 </div>
 
                 <div class="d-flex justify-content-end">
-                    <button type="submit" class="btn btn-primary">
+                    <button type="submit" class="btn-brand-primary">
                         {{ __('Email Password Reset Link') }}
                     </button>
                 </div>

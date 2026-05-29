@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
+    @include('partials.placement-instructions')
+
     <div class="container my-5 d-flex justify-content-center align-items-center">
         <div>
             <form method="POST" action="{{ route('register') }}">
@@ -44,11 +46,11 @@
 
                 <!-- Actions -->
                 <div class="d-flex justify-content-between align-items-center">
-                    <a href="{{ route('login') }}" class="text-decoration-underline small text-muted">
+                    <a href="{{ route('login') }}" class="btn-brand-secondary">
                         {{ __('Already registered?') }}
                     </a>
 
-                    <button type="submit" class="btn btn-primary">
+                    <button type="submit" class="btn-brand-primary">
                         {{ __('Register') }}
                     </button>
                 </div>

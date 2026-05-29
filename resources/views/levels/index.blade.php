@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-    <h1 class="text-center play">Level Placements 2025-2026</h1>
+    <h1 class="text-center play">Level Placements 2026-2027</h1>
     <div class="container d-flex justify-content-center my-5 roboto">
         <table>
             <thead>
@@ -13,6 +13,8 @@
                 <th class="px-4">Tap</th>
                 <th class="px-4">Pointe</th>
                 <th class="px-4">Acro</th>
+                <th class="px-4">Teacher Recommendation</th>
+                <th class="px-4">Teacher Comments</th>
             </tr>
             </thead>
             <tbody>
@@ -26,6 +28,8 @@
                     <td class="px-4">{{ $level->tap }}</td>
                     <td class="px-4">{{ $level->pointe }}</td>
                     <td class="px-4">{{ $level->acro }}</td>
+                    <td class="px-4">{{ $level->teacher_recommendation }}</td>
+                    <td class="px-4">{{ $level->teacher_comments }}</td>
                 </tr>
             @endforeach
             </tbody>
